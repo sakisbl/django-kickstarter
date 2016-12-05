@@ -17,4 +17,4 @@ Django-kickstarter is a kickstarter clone made for fun.
 7. python manage.py createsuperuser
 8. python manage.py runserver
 
-You can access the home page by visiting http://www.localhost:8000
+You can access the home page by visiting http://localhost:8000
