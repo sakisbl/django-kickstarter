@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}
+  {{ project.name }}
+{% endblock title %}
+
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-8">
+      <h2>{{ project.name }}</h2>
+      <p>
+        {{ project.short_description }}
+      </p>
+      <img class="img-responsive" src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
+      <p>
+        {{ project.description|safe }}
+      </p>
+    </div>
+    <div class="col-md-4">
+      <br><br><br>
+      <h4>Goal: {{ project.goal }}</h4>
+      <h4>Amount Raised: {{ project.amountRaised }}</h4>
+      Created at <strong>{{ project.created }}</strong> by <strong>{{ project.creator.username }}</strong>
+    </div>
+  </div>
+
+  <h1>Fund the Project</h1>
+  <div class="form-horizontal">
+    <form action="." method="post" enctype="multipart/form-data" novalidate>
+      {{ form|bootstrap_horizontal }}
+      {% csrf_token %}
+      <div class="form-group">
+        <div class="col-sm-10 col-sm-offset-2">
+          <button type="submit" class="btn btn-primary">Fund</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock content %}

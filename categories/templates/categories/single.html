@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ category.name }}
+{% endblock title %}
+
+{% block content %}
+<h1>{{ category.name }}</h1>
+{% for project in projects %}
+  <a href="{{ project.get_absolute_url }}">Name: {{ project.name }}<br></a>
+  Description: {{ project.description }}<br>
+  Image: <img src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
+  Goal: {{ project.goal}}<br>
+  Amount Raised: {{ project.amountRaised }}<br>
+  Created: {{ project.created }} by {{ project.creator.username }}<br>
+  <br>
+{% endfor %}
+{% endblock content %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <h1>Dashboard</h1>
+  <p>Welcome to your dashboard. You can <a href="{% url "edit" %}">edit your profile</a> or <a href="{% url "password_change" %}">change your password</a>.</p>
+  <div class="row profile">
+		<div class="col-md-3">
+			<div class="profile-sidebar">
+        {% if profile.image %}
+        <!-- SIDEBAR USERPIC -->
+        <div class="profile-userpic">
+          <img class="img-responsive" src="{{ profile.photo.url }}" alt="{{ profile.user.username }}" />
+        </div>
+        <!-- END SIDEBAR USERPIC -->
+        {% endif %}
+				<!-- SIDEBAR USER TITLE -->
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">
+						{{ profile.user.first_name }} {{ profile.user.last_name }}
+					</div>
+				</div>
+				<!-- END SIDEBAR USER TITLE -->
+				<!-- SIDEBAR BUTTONS -->
+				<div class="profile-userbuttons">
+					<button type="button" class="btn btn-success btn-sm">Follow</button>
+					<button type="button" class="btn btn-danger btn-sm">Message</button>
+				</div>
+				<!-- END SIDEBAR BUTTONS -->
+				<!-- SIDEBAR MENU -->
+				<div class="profile-usermenu">
+					<ul class="nav">
+						<li class="active">
+							<a href="#">
+							<i class="glyphicon glyphicon-home"></i>
+							Overview </a>
+						</li>
+						<li>
+							<a href="{% url "edit" %}">
+							<i class="glyphicon glyphicon-user"></i>
+							Account Settings </a>
+						</li>
+					</ul>
+				</div>
+				<!-- END MENU -->
+			</div>
+		</div>
+		<div class="col-md-9">
+            <div class="profile-content">
+              {% for project in projects %}
+              <div class="row well">
+                <div class="col-md-8">
+                  <h2><a href="{{ project.get_absolute_url }}">Name: {{ project.name }}<br></a></h2>
+                  <p>
+                    {{ project.short_description }} <br><br>
+                    Created at <strong>{{ project.created }}</strong> by <strong>{{ project.creator.username }}</strong>
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img class="img-responsive" src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
+                  <h4>Goal: {{ project.goal }}</h4>
+                  <h4>Amount Raised: {{ project.amountRaised }}</h4>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar"
+                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                      40%
+                    </div>
+                  </div>
+                  {% if request.user == project.creator %}
+                  <a class="btn btn-info" role="button" href="{% url 'edit_project' slug=project.slug %}">Edit</a>
+                  <a class="btn btn-danger" role="button" href="{% url 'delete_project' slug=project.slug %}">Delete</a>
+                  {% endif %}
+                </div>
+              </div>
+              <br>
+              <br>
+              {% endfor %}
+            </div>
+		</div>
+	</div>
+{% endblock %}
