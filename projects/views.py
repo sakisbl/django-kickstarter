@@ -72,11 +72,14 @@ def delete_project(request, slug=None):
     project.delete()
     return redirect('projects_list')
 
+from datetime import datetime
 
 @login_required
 def my_projects(request):
-    projects = Project.objects.filter(creator=request.user)
+    inactive_projects = Project.objects.filter(creator=request.user).filter(finish__lt=datetime.now())
+    active_projects = Project.objects.filter(creator=request.user).filter(finish__gte=datetime.now())
     context = {
-        'projects': projects
+        'active_projects': active_projects,
+        'inactive_projects': inactive_projects,
     }
-    return render(request, 'projects/list.html', context)
+    return render(request, 'projects/my_list.html', context)
