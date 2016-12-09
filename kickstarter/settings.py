@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tinymce',
     'bootstrapform',
+    'rest_framework',
     'projects',
     'categories',
+    'apiapp',
 ]
 
 MIDDLEWARE = [

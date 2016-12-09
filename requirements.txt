@@ -1,4 +1,5 @@
 Django==1.10.4
 django-bootstrap-form==3.2.1
 django-tinymce==2.4.0
+djangorestframework==3.5.3
 Pillow==3.4.2

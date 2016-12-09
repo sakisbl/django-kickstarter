@@ -22,6 +22,7 @@ from projects.views import projects_list
 urlpatterns = [
     url(r'^$', projects_list),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/', include('apiapp.urls')),
     url(r'^account/', include('account.urls')),
     url(r'^projects/', include('projects.urls')),
     url(r'^categories/', include('categories.urls')),
