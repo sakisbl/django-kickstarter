@@ -1,12 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Project
 from .forms import ProjectForm, RaiseAmountForm
 
 
 def projects_list(request):
-    projects = Project.objects.all()
+    project_list = Project.objects.all()
+    paginator = Paginator(project_list, 5)
+    page = request.GET.get('page')
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        projects = paginator.page(1)
+    except EmptyPage:
+        projects = paginator.page(paginator.num_pages)
     context = {
         'projects': projects,
     }
