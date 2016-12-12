@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from datetime import datetime
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
 from projects.models import Project
@@ -9,10 +10,12 @@ from projects.models import Project
 @login_required
 def dashboard(request):
     profile = get_object_or_404(Profile, user=request.user)
-    projects = Project.objects.filter(creator=request.user)
+    inactive_projects = Project.objects.filter(creator=request.user).filter(finish__lt=datetime.now())
+    active_projects = Project.objects.filter(creator=request.user).filter(finish__gte=datetime.now())
     context = {
         'profile': profile,
-        'projects': projects,
+        'active_projects': active_projects,
+        'inactive_projects': inactive_projects,
     }
     return render(request, 'account/dashboard.html', context)
 

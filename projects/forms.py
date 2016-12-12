@@ -12,7 +12,11 @@ class ProjectForm(forms.ModelForm):
             'cover_image',
             'goal',
             'category',
+            'finish',
         ]
+        widgets = {
+            'finish': forms.DateInput(attrs={'class': 'datepicker'})
+        }
 
     def clean_goal(self, *args, **kwargs):
         goal = self.cleaned_data.get('goal')

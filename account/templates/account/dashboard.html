@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load divide %}
+{% load multiply %}
 
 {% block title %}Dashboard{% endblock %}
 
@@ -36,11 +38,6 @@
 							<i class="glyphicon glyphicon-home"></i>
 							Overview </a>
 						</li>
-						<li>
-							<a href="{% url "edit" %}">
-							<i class="glyphicon glyphicon-user"></i>
-							Account Settings </a>
-						</li>
 					</ul>
 				</div>
 				<!-- END MENU -->
@@ -48,34 +45,90 @@
 		</div>
 		<div class="col-md-9">
             <div class="profile-content">
-              {% for project in projects %}
-              <div class="row well">
-                <div class="col-md-8">
-                  <h2><a href="{{ project.get_absolute_url }}">Name: {{ project.name }}<br></a></h2>
-                  <p>
-                    {{ project.short_description }} <br><br>
-                    Created at <strong>{{ project.created }}</strong> by <strong>{{ project.creator.username }}</strong>
-                  </p>
-                </div>
-                <div class="col-md-4">
-                  <img class="img-responsive" src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
-                  <h4>Goal: {{ project.goal }}</h4>
-                  <h4>Amount Raised: {{ project.amountRaised }}</h4>
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar"
-                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
-                      40%
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                  <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Active Projects
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                      {% for project in active_projects %}
+                      <div class="row well">
+                        <div class="col-md-8">
+                          <h2><a href="{{ project.get_absolute_url }}">Name: {{ project.name }}<br></a></h2>
+                          <p>
+                            {{ project.short_description }} <br><br>
+                            Created at <strong>{{ project.created }}</strong> by <strong>{{ project.creator.username }}</strong>
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <img class="img-responsive" src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
+                          <h4>Goal: {{ project.goal }}</h4>
+                          <h4>Amount Raised: {{ project.amountRaised }}</h4>
+                          <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                            aria-valuenow="{{ project.amountRaised | divide:project.goal | multiply:100 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ project.amountRaised | divide:project.goal | multiply:100 }}%">
+                              {{ project.amountRaised | divide:project.goal | multiply:100 }}%
+                            </div>
+                          </div>
+                          {% if request.user == project.creator %}
+                          <a class="btn btn-info" role="button" href="{% url 'edit_project' slug=project.slug %}">Edit</a>
+                          <a class="btn btn-danger" role="button" href="{% url 'delete_project' slug=project.slug %}">Delete</a>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <br>
+                      <br>
+                      {% endfor %}
                     </div>
                   </div>
-                  {% if request.user == project.creator %}
-                  <a class="btn btn-info" role="button" href="{% url 'edit_project' slug=project.slug %}">Edit</a>
-                  <a class="btn btn-danger" role="button" href="{% url 'delete_project' slug=project.slug %}">Delete</a>
-                  {% endif %}
                 </div>
-              </div>
-              <br>
-              <br>
-              {% endfor %}
+                <div class="panel panel-default">
+                  <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                      <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Inactive Projects
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                      {% for project in inactive_projects %}
+                      <div class="row well">
+                        <div class="col-md-8">
+                          <h2><a href="{{ project.get_absolute_url }}">Name: {{ project.name }}<br></a></h2>
+                          <p>
+                            {{ project.short_description }} <br><br>
+                            Created at <strong>{{ project.created }}</strong> by <strong>{{ project.creator.username }}</strong>
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <img class="img-responsive" src="{{ project.cover_image.url }}" alt="{{ project.slug }}" />
+                          <h4>Goal: {{ project.goal }}</h4>
+                          <h4>Amount Raised: {{ project.amountRaised }}</h4>
+                          <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                            aria-valuenow="{{ project.amountRaised | divide:project.goal | multiply:100 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ project.amountRaised | divide:project.goal | multiply:100 }}%">
+                              {{ project.amountRaised | divide:project.goal | multiply:100 }}%
+                            </div>
+                          </div>
+                          {% if request.user == project.creator %}
+                          <a class="btn btn-info" role="button" href="{% url 'edit_project' slug=project.slug %}">Edit</a>
+                          <a class="btn btn-danger" role="button" href="{% url 'delete_project' slug=project.slug %}">Delete</a>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <br>
+                      <br>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                </div>
             </div>
 		</div>
 	</div>
